@@ -3,8 +3,33 @@ const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
+const likes = document.querySelectorAll(".like")
+const errorContainer = document.querySelector("#modal")
+const errorMessage = document.querySelector("#modal-message")
 
+for (like of likes){
+  like.addEventListener("click",addLike)
+}
 
+function addLike(event){
+  mimicServerCall().then(() => {
+    if (event.target.classList.contains("activated-heart")){
+      event.target.classList.remove("activated-heart")
+    } else {
+      event.target.classList.add("activated-heart")
+    }
+  })
+  .catch(processError)
+}
+
+function processError(error){
+  errorContainer.classList.remove("hidden")
+  errorMessage.textContent = error
+  setTimeout(() => {
+    errorContainer.classList.add("hidden")
+    errorMessage.textContent = ""
+  }, 3000)
+}
 
 
 //------------------------------------------------------------------------------
@@ -12,14 +37,14 @@ const FULL_HEART = '♥'
 //------------------------------------------------------------------------------
 
 function mimicServerCall(url="http://mimicServer.example.com", config={}) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      let isRandomFailure = Math.random() < .2
-      if (isRandomFailure) {
-        reject("Random server error. Try again.");
-      } else {
-        resolve("Pretend remote server notified of action!");
-      }
-    }, 300);
-  });
+return new Promise(function(resolve, reject) {
+  setTimeout(function() {
+    let isRandomFailure = Math.random() < .2
+    if (isRandomFailure) {
+      reject("Random server error. Try again.");
+    } else {
+      resolve("Pretend remote server notified of action!");
+    }
+  }, 300);
+});
 }
